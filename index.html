@@ -1,0 +1,184 @@
+
+ <!DOCTYPE html>
+<html>
+<head>
+<title>Test</title>
+ <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+
+  <script type="text/javascript">
+    var socket = io();
+    var x=[];
+    var i=0;
+    
+      socket.on('image',function(msg){
+                  x=msg;
+          console.log(x.length-1);
+
+        });
+    function resize(canvas) {
+    if (canvas.height!=window.innerHeight || canvas.width!=window.innerWidth) {
+        canvas.width=window.innerWidth;
+        canvas.height=window.innerHeight;
+        }
+    }
+  
+  function drawpic(context,i) {
+      img = new Image();
+      img.src =x[i]; //sets or returns the value of the src attribute of an image
+        img.onload = function(e) {
+
+        //context.beginPath();
+       
+        //context.globalAlpha=1;
+        context.drawImage(img,0,0,canvas.width,canvas.height);
+        
+      }
+    
+  }
+  function forward() {
+    if (i > x.length-1) {
+            i=0;
+      
+    } 
+    drawpic(context,i);
+    i=i+1;   
+      console.log(i);
+}
+  function backward() {
+    if (i <= 0) {
+            i=x.length-1;
+      
+    } 
+    drawpic(context,i);
+    i=i-1;   
+      console.log(i);
+}
+
+function pause() {
+    clearInterval(Timers);
+    var pauseButton = document.getElementById("Pause");
+    if (pauseButton.value=="Pause") {
+      pauseButton.value = "imagePlay";
+      console.log("pause");
+      
+     }else { 
+        pauseButton.value = "Pause";
+        Timers = setInterval(imagePlay, 2000);
+
+
+     }
+     
+
+}
+   
+  </script>
+
+   <style>
+      body {
+    
+         background-color: #222;
+        
+}
+      #canvas {
+      
+      margin: 0 auto;
+      border: 0;
+      height:400px;
+      width:1200px;
+      box-shadow:4px 6px 6px #444444;
+      overflow: hidden; /*  Disable scrollbars */
+      display: block;  /* No floating content on sides */
+    }
+    header {
+    background-color:#000;
+    box-shadow: 0 -1px 2px #111111;
+    display:block;
+    height:70px;
+    position:relative;
+    width:100%;
+    z-index:100;
+}
+header h2{
+    color: #FFF;
+    font-size:22px;
+    font-weight:normal;
+    left:50%;
+    margin-left:-400px;
+    padding:22px 0;
+    position:absolute;
+    width:540px;
+}
+    .button {
+  display: inline-block;
+  padding: 15px 15px;
+  margin: 0 auto;
+  font-size: 24px;
+  cursor: pointer;
+  text-align: center;
+  outline: none;
+  color: #FFF;
+  background-color: #333;
+  border: none;
+  border-radius: 100px;
+  box-shadow: 0 9px #999;
+}
+
+.button:hover {background-color: #3e8e41}
+
+.button:active {
+  background-color: #555;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+   </style>
+</head>
+<body>
+ <div>
+ <header>
+      <h2>HTML5 Canvas Slideshow with Nodejs By Chayanin</h2>
+
+  </header>     
+      <br>
+      <canvas id="canvas" ></canvas>
+      <br>
+ 
+    </div>  
+          <center>
+      
+      <input type="button" class="button" onclick="backward()" value="<<">
+      <input type="button" class="button" onclick="pause()" id=Pause value="Pause">
+      <input type="button" class="button" onclick="forward()" value=">>">
+      </center>
+
+
+</body>
+<script type="text/javascript">
+  var canvas=document.getElementById("canvas");
+  var context=canvas.getContext('2d');
+    window.onload=function(){
+    resize(canvas);
+    
+   }
+  window.onresize = function(event) {
+    resize(canvas);
+    
+  }
+  function imagePlay(){
+   
+    if (i > x.length-1) {
+            i=0; 
+      
+    } 
+    drawpic(context,i);
+
+    i=i+1;   
+      console.log(i);
+      
+
+    }
+
+  var Timers = setInterval(imagePlay, 2000);
+</script>
+</html>
+ 
